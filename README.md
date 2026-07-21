@@ -36,8 +36,13 @@ tisk edit 1 -t "New Title" -d "New description" -e "New End date"
 tisk remove 1
 ```
 
+### Reset (Delete all tasks)
+```
+tisk reset
+```
+
 ### Undo last action
-```bash
+```
 tisk undo
 ```
 ## AI Disclosure
