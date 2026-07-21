@@ -1,5 +1,7 @@
 # Tisk
 ###### The coolest CLI task manager because I made it :D
+<img width="1304" height="779" alt="image" src="https://github.com/user-attachments/assets/edebfb08-040d-4d6c-bdca-c5d427f471e3" />
+
 
 ## Installation
 ```
