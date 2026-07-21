@@ -1,7 +1,6 @@
 #TaskController.py
 from . import Task 
 from .dateparse import parse_date
-import tabulate
 import json
 import os
 from datetime import date 
@@ -60,7 +59,7 @@ class TaskController():
         if len(matches) == 1:
             return matches[0]
         if len(matches)>1:
-            titles = ', '.join(f'"{tasks[i-1]['title']}"' for i in matches)
+            titles = ', '.join(f'"{tasks[i - 1]["title"]}"' for i in matches)
             raise ValueError(f'"{selector}" Matches multiple tasks: {titles}. Use the task number insted.')
         raise ValueError(f'No task found matching "{selector}".')
 
@@ -70,8 +69,8 @@ class TaskController():
         task = Task.Task(
             args.title,
             args.description,
-            args.start_date,
-            args.end_date,
+            start_date,
+            end_date,
             getattr(args, 'done', False)
         )
         self._backup()
@@ -117,19 +116,19 @@ class TaskController():
                 title = f'[strike]{title}[/strike]'
             table.add_row(
                 str(i),
-                task.get('descriotion') or '-',
+                title,
+                task.get('description') or '-',
                 task.get('start_date') or '-',
                 task.get('end_date') or '-',
                 f'[{style}]{due_text}[/{style}]' if style else due_text,
                 '*' if task.get('done') else '',
-
             )
         console.print(table)
 
     def display(self, args):
         all_tasks = self.list_all_tasks()
         if not all_tasks:
-            console.print('There is no tasks yet! Try: [bold]tisk add "My first task"[/bold]')
+            console.print('There is no tasks yet! Try: [bold]tisk add "My first task"[/bold] ,[bold]Use "tisk -h" for help![/bold]')
             return
         show_all = getattr(args, 'all', False)
         if show_all:
@@ -142,7 +141,7 @@ class TaskController():
                 console.print('[green]All tasks are done![/green] Run "tisk list -a" to see everything')
 
     def check_task(self, args):
-        tasks = self.list_all_tasks
+        tasks = self.list_all_tasks()
         if not tasks:
             console.print('[yellow]There are no tasks to check.[/yellow]')
             return
@@ -156,7 +155,8 @@ class TaskController():
         self._backup()
         tasks[index-1]['done'] = True
         self._write_tasks(tasks)
-        console.print(f'"{tasks[index-1]['title']}": [green]Marked Done[/green] ')
+        title = tasks[index - 1]['title']
+        console.print(f'"{title}": [green]Marked Done[/green]')
     
     def remove_task(self, args):
         tasks = self.list_all_tasks()
@@ -194,9 +194,9 @@ class TaskController():
         if args.description:
             task['description'] = args.description
         if args.start_date:
-            task['start_date'] = args.start_date
+            task['start_date'] = parse_date(args.start_date)
         if args.end_date:
-            task['end_date'] = args.end_date
+            task['end_date'] = parse_date(args.end_date)
         self._backup()
         self._write_tasks(tasks)
         console.print(f'[green]Updated:[/green] "{task["title"]}"')
