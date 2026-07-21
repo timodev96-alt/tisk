@@ -5,3 +5,7 @@ class Task:
         self.start_date = start_date
         self.end_date = end_date
         self.done = done
+
+    def __str__(self):
+        return f'{self.title}, {self.discription}, {self.start_date}, {self.end_date}, {self.done}'
+    
